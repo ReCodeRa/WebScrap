@@ -1,0 +1,496 @@
+---
+title: "Peripheral Edema measurement methods (by ArticleAggregator_v03)"
+author: "ReCodeR"
+format: html
+server: shiny
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Sources of Articles
+
+You should use:
+
+-   Scopus
+-   Web of Science
+    -   [wosr](https://cran.r-project.org/web/packages/wosr/wosr.pdf)
+-   Pubmed
+-   EMBASE (for posters)
+-   Scholar (including patents)
+
+## Code
+Use approach from [vignette](http://cran.nexr.com/web/packages/easyPubMed/vignettes/easyPM_vignette_html.html)
+
+```{r}
+#| label: Install packages
+install.packages("rvest")
+install.packages("dplyr")
+install.packages("httr")
+install.packages("writexl")
+install.packages("easyPubMed")
+
+```
+
+```{r}
+#| label: Load packages
+library("rvest")
+library("dplyr")
+library("httr")
+library("stringr")
+library("glue")
+library("writexl")
+library("purrr")
+library("readxl")
+library("xml2")
+library("easyPubMed")
+```
+
+```{r}
+#| label: Environment Setup
+final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT",      "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
+term <- "'peripheral edema' measurement"
+aa_path <- r"(C:\Users\I0172484\Documents\01 - Projects\LevoAmlo 2022 Cecko\Edema Study Oct2022\Method Literature Review\)"
+setwd(aa_path)
+```
+
+## EMBASE Manual export
+
+```{r}
+#| label: Load file exported from EMBASE with standard columns
+eb_std_col <- read_xlsx(glue("{aa_path}Edema_Methods_eb_exp.xlsx"))
+eb_std_col_names <- c("Title", "AuthorAll", "Year", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "FTlink", "EBlink", "OpenLink")
+names(eb_std_col) <- eb_std_col_names 
+
+eb <- eb_std_col %>% 
+  mutate(Author=str_extract(AuthorAll, pat="\\w+(?=\\s)")) %>% 
+  select(-AuthorAll) %>% 
+  mutate(Info=NA) %>% 
+  mutate(Src="EMBASE") %>% 
+  select(Title, Author, Year, FTlink, Src, Info, everything())
+
+# write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
+# Correct for Van Der Lee manually
+
+```
+
+## Google Scholar Using rvest
+
+```{r}
+#| label: Load Google Scholar page
+gs_term <- str_replace_all(term, " ", "+")
+my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
+gs <- read_html(my_uri)
+n_hits <- gs %>% html_elements("#gs_ab_md .gs_ab_mdw") %>% html_text() %>% str_extract("\\d+") %>% as.integer()
+n_pg <- n_hits %/% 10 + 1
+# n_pg <- gs %>% html_elements("#gs_n a") %>% html_text() %>% as.integer() %>% na.omit() %>% max()
+
+res_df <- tibble(
+  title = character(),
+  info = character(),
+  ref = character()
+)
+
+for (i in 0:n_pg){
+  curr_pg <- i*10
+  print(curr_pg)
+  my_uri_pg <- glue("https://scholar.google.com/scholar?start={curr_pg}&q={gs_term}&hl=en&as_sdt=0,5&as_vis=1")
+  curr_pg <- read_html(my_uri_pg)
+  art_title <- curr_pg %>% html_elements("h3 a") %>% html_text()
+  art_info <- curr_pg %>% html_elements(".gs_a") %>% html_text()
+  art_ref <- curr_pg %>% html_elements(".gs_rt") %>% html_elements("a") %>% html_attr("href")
+  
+  curr_df <- data.frame(title=art_title, info=art_info, ref=art_ref)
+  res_df <- bind_rows(res_df, curr_df)
+}
+
+
+# art_title <- gs %>% html_elements("h3 a") %>% html_text()
+# art_info <- gs %>% html_elements(".gs_a") %>% html_text()
+# art_ref <- gs %>% html_elements(".gs_rt") %>% html_elements("a") %>% html_attr("href")
+# output_df <- data.frame(title=art_title, info=art_info, ref=art_ref)
+# write_xlsx(res_df, glue("{aa_path}gs_raw.xlsx"))
+```
+
+```{r}
+#| label: Split content of column "info"
+# res_df <- read_xlsx(glue("{aa_path}gs_raw.xlsx"))
+sep_df <- res_df %>% 
+  mutate(year=str_extract(info, pat="\\d+")) %>% 
+  mutate(author=str_extract(info, pat="(?<=[A-Z]\\s([A-Z]\\s)?)\\w+(?=\\,\\s|\\s-)")) %>% 
+  select(title, author, year, info, ref)
+
+# rename colums to be compatible with EMBASE and fill missing columns
+names(sep_df) <- c("Title", "Author", "Year", "Info", "FTlink") 
+
+```
+
+```{r}
+#| label: Expand Google Search (gs) columns to fit with EMBASE
+gs <- sep_df %>% 
+  mutate(PubDate = NA) %>% 
+  mutate(PubType = NA) %>%
+  mutate(Abstract = NA) %>% 
+  mutate(CT = NA) %>%
+  mutate(PMID = NA) %>% 
+  mutate(PUI = NA) %>%
+  mutate(DOI = NA) %>% 
+  mutate(EBlink = NA) %>%
+  mutate(OpenLink = NA) %>% 
+  mutate(Src = "GoogleScholar") %>% 
+  select(Title, Author, Year, FTlink, Src, Info, everything())
+
+write_xlsx(gs, glue("{aa_path}gs_to_merge.xlsx"))
+## Manually input missing values ;)
+```
+## Pubmed
+
+You can get full-text link using Elink method of NIH e-utilities tool
+
+```{r}
+#| label: PubMed connection
+api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+pm_query <- glue('peripheral edema measurement')
+my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
+# my_abstracts_txt <- fetch_pubmed_data(my_entrez_id, format = "abstract")
+# print(my_abstracts_txt[1:45])
+
+my_abstracts_xml <- fetch_pubmed_data(pubmed_id_list = my_entrez_id)
+print(paste0("Query retireved ",my_entrez_id$Count," records."))
+# print(my_abstracts_xml)
+# write(my_abstracts_xml, file = "PubMed_records_by_write.xml")
+# recs <- read_xml(my_abstracts_xml) #  From DB connection
+recs <- read_xml(paste0(aa_path, "PubMed_records_by_write.xml")) # From file
+
+# USE THIS  TO EXTRACT ALL FIELDS AND CHARACTER VECTOR AND JOIN TO DATAFRAME
+
+xml_abstract_n <- recs %>% xml_find_all(".//Abstract") %>% length()
+xml_pmid_n <- recs %>% xml_find_all(".//MedlineCitation/PMID | .//BookDocument/PMID") %>% length()
+xml_year_n <- recs %>% xml_find_all(".//PubDate/Year | .//PubDate/MedlineDate") %>% length()
+xml_author_n <- recs %>% xml_find_all(".//AuthorList") %>% xml_find_first(".//Author/LastName") %>% length()
+xml_title_n <- recs %>% xml_find_all(".//ArticleTitle") %>% length()
+
+# CONTINUE HERE ----
+# Some articles have Either EIdType OR IdType OR BOTH.I need IF to remove those with both
+xml_doi_n <- recs %>% xml_find_all(".//Article/ELocationID[@EIdType='doi']") %>% length() # N201
+xml_doi_n <- recs %>% xml_find_all(".//PubmedData/ArticleIdList/ArticleId[@IdType='doi'] | .//Article/ELocationID[@EIdType='doi']") %>% length() # N528
+# WRONG if
+# inspire here: https://stackoverflow.com/questions/30604107/r-conditional-evaluation-when-using-the-pipe-operator
+xml_doi_n <- recs %>% {if(xml_find_all(".//PubmedData/ArticleIdList/ArticleId[@IdType='doi']") . else xml_find_all(".//Article/ELocationID[@EIdType='doi']")} %>% length()
+
+art <- ".//PubmedArticle | .//PubmedBookArticle"
+e_doi <- ".//Article/ELocationID[@EIdType='doi']"
+p_doi <- ".//PubmedData/ArticleIdList/ArticleId[@IdType='doi']"
+n_art <- recs %>% xml_find_all(art)
+xml_doi_n <- recs %>% xml_find_all(art) %>%
+  map(if(is_empty(xml_find_first(p_doi)))
+  xml_find_first(e_doi) else
+  xml_find_first(p_doi)) %>% 
+  length()
+
+xml_doi_n <- recs %>% xml_find_all(art) %>%
+  map(., ~ifelse(is_empty(xml_find_first(.x, p_doi)), 
+  xml_find_first(e_doi),
+  xml_find_first(p_doi))) %>% 
+  length()
+
+{if(is_empty(xml_find_all(".//PubmedData/ArticleIdList/ArticleId[@IdType='doi']"))
+                          . else xml_find_all(".//Article/ELocationID[@EIdType='doi']")} %>% length()
+# LOOP: take each article. IF "have both" take "IdType" only. Do for each node and append doi to resulting vector. Use for loop.
+
+
+
+
+# Count of doi should be 372 BUT is 327 :) Correction needed.
+xml_pubtype_n <- recs %>% xml_find_all(".//PublicationTypeList | .//BookDocument") %>% xml_find_first(".//PublicationType") %>% length()
+xml_nodes_count <- data.frame(xml_abstract_n, xml_pmid_n, xml_year_n, xml_author_n, xml_title_n, xml_doi_n, xml_pubtype_n)
+print(xml_nodes_count)
+rm(list = ls(pattern='_n$'))
+
+### Split xml by items to data.frame rows ----
+library(dplyr)
+library(xml2)
+library(purrr)
+library(tidyr)
+xml <- xml2::read_xml("input/example.xml")
+rows <- xml %>% xml_find_all("//xmlsubsubnode")
+rows_df <- data_frame(node = rows) %>%
+  mutate(node_id = node %>% map(~ xml_find_first(., "ancestor::xmlnode")) %>% map(~ xml_attr(., "node-id"))) %>%
+  mutate(subnode_id = node %>% map(~ xml_parent(.)) %>% map(~ xml_attr(., "subnode-id"))) %>%
+  mutate(text = node %>% map(~ xml_text(.))) %>%
+  select(-node)
+# https://stackoverflow.com/questions/49253021/how-to-extract-xml-attr-and-xml-text-on-different-levels-with-xml2-and-purrr
+
+xml_articles <- recs %>% xml_find_all(".//PublicationTypeList | .//BookDocument")
+xml_articles[[1]][["doc"]]
+df_articles <- tibble(item = xml_articles)
+ls_articles <- as.list(xml_articles)
+
+### 5 Cases for DOI ----
+xml_5_doi <- recs %>%
+  xml_find_all(".//Article[@PubModel='Print']/../../PubmedData/ArticleIdList/ArticleID[@IdType='doi']") %>%
+  length()
+
+### THIS WORKS ----
+xml_5_doi_tested <- recs %>%
+  xml_find_all("//Article[@PubModel='Print']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>%
+  xml_text()
+
+xml_5_doi <- recs %>%
+  xml_find_all("//Article[@PubModel='Print']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+                //Article[@PubModel='Print-Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+                //Article[@PubModel='Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+                //Article[@PubModel='Electronic-eCollection']/ancestor::PubmedArticle//ELocationID[@EIdType='doi']
+               ") %>%
+  length()
+
+### CODE below generates 327 instead of 371 Captures ----
+xml_5_doi <- recs %>%
+  xml_find_all("//Article[@PubModel='Print']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+  //Article[@PubModel='Print-Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+  //Article[@PubModel='Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi'] |
+  //Article[@PubModel='Electronic-eCollection']/ancestor::PubmedArticle//ELocationID[@EIdType='doi']
+  ") %>%
+  length()
+
+# Analysis of problematic PubModel ----
+recs %>% xml_find_all("//Article[@PubModel]='Electronic'") %>% length() # Correct, 371 because one is PubmedBookArticle
+
+recs %>% xml_find_all("//PubmedArticle") %>% length() # Correct, 371 because one is PubmedBookArticle
+
+recs %>% xml_find_all("//Article[@PubModel='Print']") %>% length() # 207
+recs %>% xml_find_all("//Article[@PubModel='Print']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>% length() #165
+
+recs %>% xml_find_all("//Article[@PubModel='Print-Electronic']") %>% length() # 138
+recs %>% xml_find_all("//Article[@PubModel='Print-Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>% length() # 137
+
+recs %>% xml_find_all("//Article[@PubModel='Electronic']") %>% length() # 21
+recs %>% xml_find_all("//Article[@PubModel='Electronic']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>% length() # 20
+
+recs %>% xml_find_all("//Article[@PubModel='Electronic-eCollection']") %>% length() # 5
+recs %>% xml_find_all("//Article[@PubModel='Electronic-eCollection']/ancestor::PubmedArticle/PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>% length() #5 
+
+PubmedArticle_n <- recs %>% xml_find_all("/PubmedArticleSet/PubmedArticle") %>% length() # Is correctly 371; PubmedArticle[369] missing; does not have ANY DOI
+PubmedArticle_369 <- recs %>% xml_find_all("/PubmedArticleSet/PubmedArticle[369]//ArticleTitle") %>% xml_text()
+
+models <- recs %>% xml_find_all("//Article[@PubModel]") %>% xml_attr("PubModel") %>% as.factor() %>% levels()
+models
+
+# Find which nodes are missing in 327 nodes. ----
+node_path_n <- recs %>% xml_find_all("//*[@*='doi']") %>% length()
+node_path <- recs %>% xml_find_all("//*[@*='doi']") %>% xml_path()
+node_path
+node_mode <- recs %>% xml_find_all("//*[@*='doi']/ancestor::Article[@PubModel]") %>% length()
+write.csv(node_path, glue("{aa_path}node_path.csv"))
+
+# xml_5_doi <- recs %>% 
+#   xml_find_all(".//Article[@PubModel='Print']/ancestor::PubmedArticle") %>% xml_text()
+#   xml_find_all(".//ArticleID[@IdType='doi']")
+#   length()
+
+xml_abstract <- recs %>% xml_find_all(".//Abstract") %>% xml_text()
+xml_pmid <- recs %>% xml_find_all(".//MedlineCitation/PMID | .//BookDocument/PMID") %>% xml_text()
+xml_year <- recs %>% xml_find_all(".//PubDate/Year | .//PubDate/MedlineDate") %>% xml_text()
+xml_author <- recs %>% xml_find_all(".//AuthorList") %>% xml_find_first(".//Author/LastName") %>% xml_text()
+xml_title <- recs %>% xml_find_all(".//ArticleTitle") %>% xml_text()
+xml_doi <- recs %>% xml_find_all(".//PubmedData/ArticleIdList/ArticleId[@IdType='doi']") %>% xml_text()
+xml_pubtype <- recs %>% xml_find_all(".//PublicationTypeList | .//BookDocument") %>% xml_find_first(".//PublicationType") %>% xml_text()
+
+pm_src <- data.frame(xml_title, 
+                 xml_author,
+                 xml_year,
+                 xml_doi,
+                 xml_pmid,
+                 xml_abstract,
+                 xml_pubtype)
+
+pm <- pm_src %>% 
+  mutate(FTlink = paste0("https://dx.doi.org/",pm_src$xml_doi)) %>% 
+  mutate(CT = NA) %>% 
+  mutate(PUI = NA) %>%
+  mutate(PubDate = NA) %>%
+  mutate(EBlink = NA) %>%
+  mutate(OpenLink = NA) %>% 
+  mutate(Info = NA) %>% 
+  mutate(Src = "PubMed") %>% 
+  select(xml_title, 
+         xml_author, 
+         xml_year, 
+         FTlink, 
+         Src, 
+         Info, 
+         PubDate, 
+         xml_pubtype, 
+         xml_abstract, 
+         CT, 
+         xml_pmid, 
+         PUI, 
+         xml_doi,
+         EBlink,
+         OpenLink)
+
+names(pm) <- final_col_names
+write_xlsx(pm, glue("{aa_path}pm_to_merge.xlsx"))
+# rm(list = ls(pattern='^xml_'))
+# rm(list=ls()[!ls() %in% c("eg")])
+
+```
+```{r}
+#| label: Interating over PubMed (pm) article nodes
+api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+pm_query <- glue('peripheral edema measurement')
+my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
+# my_abstracts_txt <- fetch_pubmed_data(my_entrez_id, format = "abstract")
+# print(my_abstracts_txt[1:45])
+my_abstracts_xml <- fetch_pubmed_data(pubmed_id_list = my_entrez_id)
+print(paste0("Query retireved ",my_entrez_id$Count," records."))
+# print(my_abstracts_xml)
+# write(my_abstracts_xml, file = "PubMed_records_by_write.xml")
+recs <- read_xml(my_abstracts_xml)
+
+xml_arts <- recs %>% xml_find_all(".//PublicationTypeList | .//BookDocument")
+##  CONTINUE HERE ----
+art_title <- xml_arts %>% map_dfc(pm_ex(.))
+pm_ex <- function(x){ 
+  art_title <- x %>% xml_find_first(".//ArticleTitle") %>% xml_text()
+  return(art_title)
+}
+art_title <- xml_arts[[1]] %>% xml_find_first(".//ArticleTitle") %>% xml_text()
+print(xml_arts[1])
+
+```
+```{r}
+#| label: Split items children to tibble / data_frame
+xml_in_df <- recs %>% xml_find_all(".//PubmedArticle | .//PubmedBookArticle" ) %>% 
+  map(xml_children) %>% 
+  map(~as_tibble(t(set_names(xml_text(.), xml_name(.))))) #or map_df
+```
+
+```{r}
+#| label: Split items to tibble / data_frame
+xml_in_df <- recs %>% xml_find_all(".//PubmedArticle | .//PubmedBookArticle" ) %>% 
+  map(xml_contents) %>% 
+  map(~as_tibble(t(set_names(xml_text(.), xml_name(.))))) #or map_df
+```
+
+```{r}
+#| label: Merge results from embase (eb), Google Scholar (gs), and PubMed (pm)
+eb <- read_xlsx(glue("{aa_path}eb_to_merge.xlsx"))
+gs <- read_xlsx(glue("{aa_path}gs_to_merge.xlsx"))
+pm <- read_xlsx(glue("{aa_path}pm_to_merge.xlsx"))
+
+egp <- bind_rows(eb, gs, pm) %>% 
+  arrange(desc(Year), Author, Src)
+# rm(list=ls()[!ls() %in% c("eg")])
+# write_xlsx(egp, glue("{aa_path}egp_v02.xlsx"))
+```
+# ToDo
+- correct PubMed functionality
+- gs extract surnames that include hyphen
+- Introduce SrchIndex
+- Add columns: Status, Priority
+
+# ADDITIONAL INFO
+### DOI by easyPubmed vignette
+
+```{r}
+#| label: PubMed connection
+api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+pm_query <- glue('peripheral edema measurement')
+my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
+
+# Get articles XML
+# my_abstracts_xml <- fetch_pubmed_data(pubmed_id_list = my_entrez_id)
+# print(paste0("Query retireved ",my_entrez_id$Count," records."))
+# print(my_abstracts_xml)
+# write(my_abstracts_xml, file = "PubMed_records_by_write.xml")
+
+# recs <- read_xml(my_abstracts_xml) #  From DB connection
+# recs <- read_xml(paste0(aa_path, "PubMed_records_by_write.xml")) # From file
+
+ls_recs <- articles_to_list("PubMed_records_by_write.xml")
+
+# Extract info form the list of articles
+pm_df <- ls_recs %>% 
+  map_df(~ article_to_df(.x, autofill = TRUE, getAuthors = TRUE, getKeywords = TRUE)) %>% 
+  distinct(pmid, .keep_all=TRUE) %>%
+  select(title, lastname, year, abstract, pmid, doi)
+write_xlsx(pm_df, glue("{aa_path}pm_df_to_merge.xlsx"))
+
+```
+### DOI
+
+you can get DOI using CrossRef API, implemented as
+https://github.com/ropensci/rcrossref
+
+Find out how many elements of **#gs_n a** are detected. Inspire yourself
+in code **WebScrap_Austr_CZ_v12**
+
+```{r}
+#| label: Load Google Scholar page
+
+
+```
+
+```{python}
+#| label: Check python installation
+import os                   
+print(os.environ['path'])  
+```
+
+## Retrieve articles from Google Scholar using SerpAPI
+
+Log to the [SerpAPI site](https://serpapi.com/) Install the serpapi
+package (package NOT in conda, pip=TRUE must be used):
+
+```{r}
+library(reticulate)
+py_install("google-search-results", pip=TRUE )
+```
+
+Next load the SerpAPI interaction package.
+
+```{python}
+from serpapi import GoogleSearch
+params = {
+  "api_key": "c155eb329cff9b71b6b3cb8edbde7b049ad4cc6ec94a8a53b9a597915e18feb8",
+  "engine": "google_scholar",
+  "q": "S-lercanidipine",
+  "hl": "en"
+}
+search = GoogleSearch(params)
+results = search.get_dict()
+
+
+
+```
+
+## Shiny Documents
+
+This Quarto document is made interactive using Shiny. Interactive
+documents allow readers to modify parameters and see the results
+immediately. Learn more about Shiny interactive documents at
+<https://quarto.org/docs/interactive/shiny/>.
+
+## Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are
+automatically updated whenever inputs change. This demonstrates how a
+standard R plot can be made interactive:
+
+```{r}
+sliderInput("bins", "Number of bins:", 
+            min = 1, max = 50, value = 30)
+plotOutput("distPlot")
+```
+
+```{r}
+#| context: server
+output$distPlot <- renderPlot({
+   x <- faithful[, 2]  # Old Faithful Geyser data
+   bins <- seq(min(x), max(x), length.out = input$bins + 1)
+   hist(x, breaks = bins, col = 'darkgray', border = 'white',
+        xlab = 'Waiting time to next eruption (in mins)',
+        main = 'Histogram of waiting times')
+})
+```
