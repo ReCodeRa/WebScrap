@@ -50,15 +50,15 @@ library("easyPubMed")
 #| label: Environment Setup
 final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT",      "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
 term <- "'peripheral edema' measurement"
-aa_path <- r"(C:\Users\I0172484\Documents\01 - Projects\LevoAmlo 2022 Cecko\Edema Study Oct2022\Method Literature Review\)"
-setwd(aa_path)
+aa_path <- r"(C:\Users\I0172484\Documents\03 - Scripts\R\WebScrap\ArticleAggregator_data\)"
+# setwd(aa_path)
 ```
 
 ## EMBASE Manual export
 
 ```{r}
 #| label: Load file exported from EMBASE with standard columns
-eb_std_col <- read_xlsx(glue("{aa_path}Edema_Methods_eb_exp.xlsx"))
+eb_std_col <- read_xlsx(glue("{aa_path}eb_src.xlsx"))
 eb_std_col_names <- c("Title", "AuthorAll", "Year", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "FTlink", "EBlink", "OpenLink")
 names(eb_std_col) <- eb_std_col_names 
 
@@ -66,10 +66,11 @@ eb <- eb_std_col %>%
   mutate(Author=str_extract(AuthorAll, pat="\\w+(?=\\s)")) %>% 
   select(-AuthorAll) %>% 
   mutate(Info=NA) %>% 
-  mutate(Src="EMBASE") %>% 
+  mutate(Src="EMBASE") %>%
+  mutate(SrcIndex=row_number()) %>% 
   select(Title, Author, Year, FTlink, Src, Info, everything())
 
-# write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
+write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
 # Correct for Van Der Lee manually
 
 ```
