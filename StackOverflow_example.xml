@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+<p_item>
+    <id>id1</id>
+</p_item>
+<e_item>
+    <e_id>id2</e_id>
+</e_item>
+<p_item>
+    <id>id3</id>
+    <e_id>id3</e_id>
+</p_item>
+</items>

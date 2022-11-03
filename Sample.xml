@@ -1,0 +1,361 @@
+<?xml version="1.0" ?><!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2019//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_190101.dtd">
+<PubmedArticleSet>
+    <PubmedArticle>
+        <MedlineCitation Status="PubMed-not-MEDLINE" Owner="NLM">
+            <PMID Version="1">35958013</PMID>
+            <DateRevised>
+                <Year>2022</Year>
+                <Month>08</Month>
+                <Day>13</Day>
+            </DateRevised>
+            <Article PubModel="Print">
+                <Journal>
+                    <ISSN IssnType="Print">2224-4344</ISSN>
+                    <JournalIssue CitedMedium="Print">
+                        <Volume>11</Volume>
+                        <Issue>7</Issue>
+                        <PubDate>
+                            <Year>2022</Year>
+                            <Month>Jul</Month>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>Translational pediatrics</Title>
+                    <ISOAbbreviation>Transl Pediatr</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>The protective effect of MiR-27a on the neonatal hypoxic-ischemic encephalopathy by targeting FOXO1 in rats.</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>1199-1208</MedlinePgn>
+                </Pagination>
+                <ELocationID EIdType="doi" ValidYN="Y">10.21037/tp-22-259</ELocationID>
+                <Abstract>
+                    <AbstractText Label="Background" NlmCategory="UNASSIGNED">Neonatal hypoxic-ischemic encephalopathy (HIE), a kind of hypoxic-ischemic brain damage caused by perinatal asphyxia, is the most crucial cause of neonatal death and long-term neurological dysfunction in children. We aimed to investigate the protective effects of micro (mi)R-27a on HIE in neonatal rats.</AbstractText>
+                    <AbstractText Label="Methods" NlmCategory="UNASSIGNED">A rat model of neonatal HIE was constructed by modification of the Rice-Vannucci model. Real-time quantitative polymerase chain reaction (RT-qPCR) was used to test the expressions of miR-27a, FOXO1 messenger RNA (mRNA), interleukin-1β (IL-1β) mRNA, and tumor necrosis factor-α (TNF-α) mRNA, and western blot was applied to test the expression of FOXO1. In order to overexpress miR-27a, an intracerebroventricular injection (i.c.v) of miR-27a mimic was administered. We adopted 2,3,5-triphenytetrazolium chloride (TTC) staining and brain water content measurement to test the effects of miR-27a on the infarcted volume and edema in brain after HIE. Flow cytometry (FCM) analysis was applied to test the effects of miR-27a on the infiltrated peripheral immune cells in the rat brains after HIE.</AbstractText>
+                    <AbstractText Label="Results" NlmCategory="UNASSIGNED">We successfully established a rat model of neonatal HIE. It was revealed that the expressions of miR-27a decreased gradually after HIE, however, the expressions of FOXO1 mRNA increased. After injection of the miR-27a mimic, the expression of miR-27a in the rat HIE model brains was significantly upregulated, however, the expression of FOXO1 was robustly downregulated. Both TTC staining and brain water content showed that the infarcted volume and brain edema was markedly increased after HIE. Interestingly, the overexpression of miR-27a reduced the infarcted volume and edema induced by HIE. Additionally, RT-qPCR and FCM analysis showed that HIE lead to increases of IL-1β, TNF-α, and infiltrated immune cells. Overexpression of miR-27a could reduce the expressions of IL-1β mRNA and TNF-α mRNA, and the cell numbers of infiltrated peripheral macrophages and neutrophils in the brain.</AbstractText>
+                    <AbstractText Label="Conclusions" NlmCategory="UNASSIGNED">MiR-27a plays protective roles by reducing infarct volume and brain edema, and inhibiting inflammatory factors and infiltrated peripheral immune cells by targeting FOXO1 in neonatal HIE rats.</AbstractText>
+                    <CopyrightInformation>2022 Translational Pediatrics. All rights reserved.</CopyrightInformation>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Cai</LastName>
+                        <ForeName>Qun</ForeName>
+                        <Initials>Q</Initials>
+                        <AffiliationInfo>
+                            <Affiliation>Department of Pediatrics, Affiliated Hospital of Nantong University, Nantong, China.</Affiliation>
+                        </AffiliationInfo>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Zhang</LastName>
+                        <ForeName>Xiaoqun</ForeName>
+                        <Initials>X</Initials>
+                        <AffiliationInfo>
+                            <Affiliation>Department of Pediatrics, Affiliated Hospital of Nantong University, Nantong, China.</Affiliation>
+                        </AffiliationInfo>
+                    </Author>
+                </AuthorList>
+                <Language>eng</Language>
+                <PublicationTypeList>
+                    <PublicationType UI="D016428">Journal Article</PublicationType>
+                </PublicationTypeList>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>China</Country>
+                <MedlineTA>Transl Pediatr</MedlineTA>
+                <NlmUniqueID>101649179</NlmUniqueID>
+                <ISSNLinking>2224-4336</ISSNLinking>
+            </MedlineJournalInfo>
+            <KeywordList Owner="NOTNLM">
+                <Keyword MajorTopicYN="N">FOXO1</Keyword>
+                <Keyword MajorTopicYN="N">infarcted volume</Keyword>
+                <Keyword MajorTopicYN="N">infiltrated peripheral immune cells</Keyword>
+                <Keyword MajorTopicYN="N">inflammation</Keyword>
+                <Keyword MajorTopicYN="N">miR-27a</Keyword>
+            </KeywordList>
+            <CoiStatement>Conflicts of Interest: All authors have completed the ICMJE uniform disclosure form (available at https://tp.amegroups.com/article/view/10.21037/tp-22-259/coif). The authors have no conflicts of interest to declare.</CoiStatement>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="received">
+                    <Year>2022</Year>
+                    <Month>05</Month>
+                    <Day>16</Day>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="accepted">
+                    <Year>2022</Year>
+                    <Month>07</Month>
+                    <Day>04</Day>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2022</Year>
+                    <Month>8</Month>
+                    <Day>12</Day>
+                    <Hour>2</Hour>
+                    <Minute>50</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2022</Year>
+                    <Month>8</Month>
+                    <Day>13</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2022</Year>
+                    <Month>8</Month>
+                    <Day>13</Day>
+                    <Hour>6</Hour>
+                    <Minute>1</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">35958013</ArticleId>
+                <ArticleId IdType="doi">10.21037/tp-22-259</ArticleId>
+                <ArticleId IdType="pii">tp-11-07-1199</ArticleId>
+                <ArticleId IdType="pmc">PMC9360825</ArticleId>
+            </ArticleIdList>
+            <ReferenceList>
+                <Reference>
+                    <Citation>Neural Regen Res. 2021 Feb;16(2):205-213</Citation>
+                    <ArticleIdList>
+                        <ArticleId IdType="pubmed">32859765</ArticleId>
+                    </ArticleIdList>
+                </Reference>
+            </ReferenceList>
+        </PubmedData>
+    </PubmedArticle>
+    <PubmedBookArticle>
+        <BookDocument>
+            <PMID Version="1">35881737</PMID>
+            <ArticleIdList>
+                <ArticleId IdType="bookaccession">NBK582132</ArticleId>
+            </ArticleIdList>
+            <Book>
+                <Publisher>
+                    <PublisherName>StatPearls Publishing</PublisherName>
+                    <PublisherLocation>Treasure Island (FL)</PublisherLocation>
+                </Publisher>
+                <BookTitle book="statpearls">StatPearls</BookTitle>
+                <PubDate>
+                    <Year>2022</Year>
+                    <Month>01</Month>
+                </PubDate>
+                <BeginningDate>
+                    <Year>2022</Year>
+                    <Month>01</Month>
+                </BeginningDate>
+                <Medium>Internet</Medium>
+            </Book>
+            <ArticleTitle book="statpearls" part="article-145086">Applanation Tonometry</ArticleTitle>
+            <Language>eng</Language>
+            <AuthorList Type="authors">
+                <Author>
+                    <LastName>Zeppieri</LastName>
+                    <ForeName>Marco</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>University Hospital of Udine, Italy</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author>
+                    <LastName>Gurnani</LastName>
+                    <ForeName>Bharat</ForeName>
+                    <Initials>B</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Aravind Eye Care System</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <PublicationType UI="D000072643">Study Guide</PublicationType>
+            <Abstract>
+                <AbstractText>Tonometry involves diagnostic testing to measure the pressure inside the eye or intraocular pressure (IOP). Glaucoma is a silent disease that causes irreversible functional peripheral visual field loss that can ultimately lead to blindness in the very late stages of the disease if not treated. Tonometry should be performed during routine ophthalmic examinations to screen for glaucoma and other ocular diseases. IOP must be monitored periodically during the management of patients with glaucoma, ocular hypertension (OHT), and subjects at risk of developing glaucoma. Normal IOP measures in the range of 10 to 21 (mmHg), which is based on average IOP levels in populations surveys in normal subjects, and less than 2 % of normal subjects show IOP greater than 21 mmHg.[1]  Possible causes for an IOP under normal rages (hypotonus) include uveitis, ocular traumas, retinal detachment, and post-surgery complications, especially after filtering surgery. Elevated IOP is normally caused by glaucoma. The definition of glaucoma in the past years has evolved from a disease solely defined by IOP&gt;21 mmHg to include the assessments of functional and morphological defects. The concept of determining and re-evaluating a personalized target IOP is currently an important issue in managing patients. These ranges in mmHg are associated with levels of IOP that are thought to cause a minimal likelihood of optic nerve damage or visual field loss, or progression of an existing lesion due to OHT.[2]  Treatment of OHT and glaucoma involves lowering IOP using local drop therapy, laser, and/or surgery. It is thus of utmost importance that instruments used to measure IOP are properly calibrated, accurate and precise, considering that the treatment options are based on IOP levels, together with visual field results, clinical evaluations, and morphological assessments of the optic nerve and retinal nerve fiber layer. The true IOP inside the eyeball can be measured by inserting a probe in the anterior chamber to measure the manometric pressure. However, this invasive technique tends to be strictly used in animal models and can surely not be considered in a routine clinical setting.[3] Numerous instruments and tonometers have been created since the 1800s to measure IOP, which have been designed to provide accurate, reliable, precise, and reproducible measurements of IOP. Each method has advantages, disadvantages, and limits and is more or less influenced by ocular factors, rendering some methods clinically acceptable and practical while others are obsolete. Tonometers are based on different concepts and principles of physics that define how IOP levels are measured and what factors can theoretically influence these readings. The force needed to applanate, indent, and/or rebound the surface of the eye is used to estimate and calculate the IOP provided by the numerous tonometers used to date. It is important to note that IOP readings can be influenced by numerous factors based on each tonometer used.[4] These factors can influence accuracy, precision, repeatability, measurement variability, and specificity. The factors that need to be considered include the amount of fluorescein, excessive tear production, corneal astigmatism, scarring, scleral rigidity, corneal edema, central corneal thickness, and arterial perfusion, central venous pressures, eye position, etc.[4] Goldmann applanation tonometry (GAT) is currently the most widely accepted method used to measure IOP and is considered the gold standard tonometer in clinics.[5] GAT indirectly measures the IOP by assessing the force needed to flatten a predetermined surface area of the cornea. Taken simplistically, if the eyeball is hard, it takes more force to flatten the surface of the cornea, which is directly influenced by the IOP. GAT is based on the principles of applanation tonometry. Other instruments that have been built using the principles of applanation include the Perkins applanation tonometer, non-contact tonometers, and the Ocular Response tonometer (ORA).[6]</AbstractText>
+                <CopyrightInformation>Copyright © 2022, StatPearls Publishing LLC.</CopyrightInformation>
+            </Abstract>
+            <Sections>
+                <Section>
+                    <SectionTitle book="statpearls" part="article-145086" sec="article-145086.s1">Continuing Education Activity</SectionTitle>
+                </Section>
+                <Section>
+                    <SectionTitle book="statpearls" part="article-145086" sec="article-145086.s2">Introduction</SectionTitle>
+                </Section>
+            </Sections>
+            <ContributionDate>
+                <Year>2022</Year>
+                <Month>6</Month>
+                <Day>6</Day>
+            </ContributionDate>
+        </BookDocument>
+        <PubmedBookData>
+            <History>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2022</Year>
+                    <Month>7</Month>
+                    <Day>27</Day>
+                    <Hour>6</Hour>
+                    <Minute>1</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2022</Year>
+                    <Month>7</Month>
+                    <Day>27</Day>
+                    <Hour>6</Hour>
+                    <Minute>1</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2022</Year>
+                    <Month>7</Month>
+                    <Day>27</Day>
+                    <Hour>6</Hour>
+                    <Minute>1</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">35881737</ArticleId>
+            </ArticleIdList>
+        </PubmedBookData>
+    </PubmedBookArticle>
+    <PubmedArticle>
+        <MedlineCitation Status="MEDLINE" IndexingMethod="Automated" Owner="NLM">
+            <PMID Version="1">35491065</PMID>
+            <DateCompleted>
+                <Year>2022</Year>
+                <Month>05</Month>
+                <Day>03</Day>
+            </DateCompleted>
+            <DateRevised>
+                <Year>2022</Year>
+                <Month>05</Month>
+                <Day>03</Day>
+            </DateRevised>
+            <Article PubModel="Print-Electronic">
+                <Journal>
+                    <ISSN IssnType="Electronic">1557-9859</ISSN>
+                    <JournalIssue CitedMedium="Internet">
+                        <Volume>106</Volume>
+                        <Issue>3</Issue>
+                        <PubDate>
+                            <Year>2022</Year>
+                            <Month>May</Month>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>The Medical clinics of North America</Title>
+                    <ISOAbbreviation>Med Clin North Am</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>Congestive Heart Failure.</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>447-458</MedlinePgn>
+                </Pagination>
+                <ELocationID EIdType="pii" ValidYN="Y">S0025-7125(21)00176-0</ELocationID>
+                <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.mcna.2021.12.002</ELocationID>
+                <Abstract>
+                    <AbstractText>Heart disease is the leading cause of death in the United States with an estimated 6 million adults living with heart failure. In patients with heart failure, the physical examination can provide important prognostic information and is also used to guide both diagnosis and management, including determining the need for inpatient versus outpatient management. Presenting symptoms include dyspnea, peripheral edema, orthopnea, paroxysmal nocturnal dyspnea, and bendopnea. In patients with suspected heart failure, a "head-to-toe" physical examination approach is recommended with the addition of special maneuvers such as the measurement of jugular venous pressure, valsalva maneuver, and hepatojugular reflux as needed.</AbstractText>
+                    <CopyrightInformation>Published by Elsevier Inc.</CopyrightInformation>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Chen</LastName>
+                        <ForeName>Jennifer</ForeName>
+                        <Initials>J</Initials>
+                        <AffiliationInfo>
+                            <Affiliation>Department of Internal Medicine, University of California, Davis, 4860 Y Street Suite 0100, Sacramento, CA 95817, USA. Electronic address: jecchen@ucdavis.edu.</Affiliation>
+                        </AffiliationInfo>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Aronowitz</LastName>
+                        <ForeName>Paul</ForeName>
+                        <Initials>P</Initials>
+                        <AffiliationInfo>
+                            <Affiliation>Department of Internal Medicine, University of California, Davis, 4150 V Street Suite 3100 PSSB, Sacramento, CA 95817, USA.</Affiliation>
+                        </AffiliationInfo>
+                    </Author>
+                </AuthorList>
+                <Language>eng</Language>
+                <PublicationTypeList>
+                    <PublicationType UI="D016428">Journal Article</PublicationType>
+                    <PublicationType UI="D016454">Review</PublicationType>
+                </PublicationTypeList>
+                <ArticleDate DateType="Electronic">
+                    <Year>2022</Year>
+                    <Month>04</Month>
+                    <Day>04</Day>
+                </ArticleDate>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>United States</Country>
+                <MedlineTA>Med Clin North Am</MedlineTA>
+                <NlmUniqueID>2985236R</NlmUniqueID>
+                <ISSNLinking>0025-7125</ISSNLinking>
+            </MedlineJournalInfo>
+            <CitationSubset>IM</CitationSubset>
+            <MeshHeadingList>
+                <MeshHeading>
+                    <DescriptorName UI="D000328" MajorTopicYN="N">Adult</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D004417" MajorTopicYN="N">Dyspnea</DescriptorName>
+                    <QualifierName UI="Q000175" MajorTopicYN="N">diagnosis</QualifierName>
+                    <QualifierName UI="Q000209" MajorTopicYN="N">etiology</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D006333" MajorTopicYN="Y">Heart Failure</DescriptorName>
+                    <QualifierName UI="Q000150" MajorTopicYN="N">complications</QualifierName>
+                    <QualifierName UI="Q000175" MajorTopicYN="N">diagnosis</QualifierName>
+                    <QualifierName UI="Q000628" MajorTopicYN="N">therapy</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D006801" MajorTopicYN="N">Humans</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D008171" MajorTopicYN="Y">Lung Diseases</DescriptorName>
+                    <QualifierName UI="Q000150" MajorTopicYN="N">complications</QualifierName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D010808" MajorTopicYN="N">Physical Examination</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D011379" MajorTopicYN="N">Prognosis</DescriptorName>
+                </MeshHeading>
+                <MeshHeading>
+                    <DescriptorName UI="D014481" MajorTopicYN="N" Type="Geographic">United States</DescriptorName>
+                </MeshHeading>
+            </MeshHeadingList>
+            <KeywordList Owner="NOTNLM">
+                <Keyword MajorTopicYN="N">Congestive heart failure</Keyword>
+                <Keyword MajorTopicYN="N">Jugular venous pressure</Keyword>
+                <Keyword MajorTopicYN="N">Valsalva</Keyword>
+            </KeywordList>
+            <CoiStatement>Disclosure The authors have nothing to disclose.</CoiStatement>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2022</Year>
+                    <Month>5</Month>
+                    <Day>1</Day>
+                    <Hour>21</Hour>
+                    <Minute>5</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2022</Year>
+                    <Month>5</Month>
+                    <Day>2</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2022</Year>
+                    <Month>5</Month>
+                    <Day>4</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">35491065</ArticleId>
+                <ArticleId IdType="pii">S0025-7125(21)00176-0</ArticleId>
+                <ArticleId IdType="doi">10.1016/j.mcna.2021.12.002</ArticleId>
+            </ArticleIdList>
+        </PubmedData>
+    </PubmedArticle>
+</PubmedArticleSet>
