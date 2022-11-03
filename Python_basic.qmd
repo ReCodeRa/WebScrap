@@ -10,6 +10,7 @@ format: html
 library(reticulate)
 py_install("bs4", method="conda" )
 py_install("pandas", method="conda" )
+py_install("selenium", method="conda" )
 
 ```
 
@@ -48,5 +49,28 @@ print(len(book_list))
 print(book_list[1:4])
 df = pd.DataFrame(book_list)
 print(df)
+
+```
+
+
+```{python}
+#| label: Selenium installation with Chrome Webdriver
+
+# Source: https://www.youtube.com/watch?v=pUUhvJvs-R4
+
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+drv_path = "C:\\Users\\I0172484\\Documents\WebDriver\\chromedriver.exe"
+driver = webdriver.Chrome(drv_path)
+
+url="http://the-internet.herokuapp.com/login"
+driver.get(url)
+
+driver.find_element("xpath", '//*[@id="username"]').send_keys('tomsmith')
+driver.find_element("xpath", '//*[@id="password"]').send_keys('SuperSecretPassword!')
+driver.find_element("xpath", '//*[@id="login"]/button').click()
+
+
 
 ```
