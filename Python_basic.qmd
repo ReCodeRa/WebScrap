@@ -60,6 +60,7 @@ print(df)
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 
 drv_path = "C:\\Users\\I0172484\\Documents\WebDriver\\chromedriver.exe"
 driver = webdriver.Chrome(drv_path)
@@ -70,7 +71,14 @@ driver.get(url)
 driver.find_element("xpath", '//*[@id="username"]').send_keys('tomsmith')
 driver.find_element("xpath", '//*[@id="password"]').send_keys('SuperSecretPassword!')
 driver.find_element("xpath", '//*[@id="login"]/button').click()
+# driver.quit()
 
-
+# Wait for response part
+url02="https://the-internet.herokuapp.com/dynamic_loading/2"
+driver.get(url02)
+driver.find_element("xpath", '//*[@id="start"]/button').click()
+driver.implicitly_wait(10)
+text = driver.find_element("xpath", '//*[@id="finish"]/h4').text
+print(text)
 
 ```
