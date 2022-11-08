@@ -1,0 +1,32 @@
+---
+title: "Pandas"
+format: html
+---
+
+# Code form "Basic Webscraper" by John Watson Rooney
+[Source YouTube](https://www.youtube.com/watch?v=vmEHCJofslg)
+
+```{r}
+library(reticulate)
+py_install("pandas", method="conda" )
+py_install("openpyxl", method="conda" )
+```
+
+
+```{python}
+#| label: Scrape books from eshop
+
+import pandas as pd
+import os
+
+os.getcwd()
+df = pd.read_csv("pokemon_data.csv")
+# df_x = pd.read_excel("pokemon_data.xlsx")
+# df_txt = pd.read_csv("pokemon_data.txt", delimiter='\t')
+print(df.head(3))
+print(df.tail(3))
+print(df.columns)
+print(df[['Name', 'Type 1', 'HP']][0:5])
+
+
+ ```

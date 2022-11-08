@@ -49,7 +49,7 @@ library("easyPubMed")
 ```{r}
 #| label: Environment Setup
 final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT",      "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
-term <- "'peripheral edema' measurement"
+term <- "peripheral edema measurement"
 aa_path <- r"(C:\Users\I0172484\Documents\03 - Scripts\R\WebScrap\ArticleAggregator_data\)"
 # setwd(aa_path)
 ```
@@ -80,7 +80,11 @@ eb <- eb_std_col %>%
 ```{r}
 #| label: Load Google Scholar page
 gs_term <- str_replace_all(term, " ", "+")
-my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
+# my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
+
+# For Title; including patents; excluding citation
+my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=2007&as_vis=1&q=allintitle%3A+{gs_term}&btnG=")
+
 gs <- read_html(my_uri)
 n_hits <- gs %>% html_elements("#gs_ab_md .gs_ab_mdw") %>% html_text() %>% str_extract("\\d+") %>% as.integer()
 n_pg <- n_hits %/% 10 + 1
@@ -150,8 +154,13 @@ gs <- sep_df %>%
 ```{r}
 #| label: PubMed connection and article extraction
 api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
-pm_query <- "peripheral[tiab] edema[tiab] measurement[tiab]"
+
+sl_term <- str_split(term, " ", simplify=TRUE)
+pm_query <- str_c(sl_term,"[tiab] ", collapse="")
+
+# pm_query <- "peripheral[tiab] edema[tiab] measurement[tiab]"
 # pm_query <- glue("{term}[tiab]")
+
 my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
 my_entrez_id$QueryTranslation
 my_entrez_id$Count
