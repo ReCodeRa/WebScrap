@@ -222,7 +222,6 @@ write_xlsx(egp, glue("{aa_path}egp_v01.xlsx"))
 
 # ToDo
 - gs extract surnames that include hyphen
-- Add columns: Status, Priority
 
 # ADDITIONAL INFO
 ### DOI by easyPubmed vignette
