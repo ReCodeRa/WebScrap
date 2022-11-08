@@ -222,6 +222,10 @@ write_xlsx(egp, glue("{aa_path}egp_v01.xlsx"))
 
 # ToDo
 - gs extract surnames that include hyphen
+- gs with single page outcome
+- save final table with search_term name (instead of egp)
+- delete variables after writing to xlsx_to_merge
+- delete temporary files (to_marge, PubMed.xml etc.)
 
 # ADDITIONAL INFO
 ### DOI by easyPubmed vignette
