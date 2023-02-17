@@ -27,6 +27,7 @@ Use approach from [vignette](http://cran.nexr.com/web/packages/easyPubMed/vignet
 install.packages("rvest")
 install.packages("dplyr")
 install.packages("httr")
+install.packages("readxl")
 install.packages("writexl")
 install.packages("easyPubMed")
 
@@ -48,10 +49,10 @@ library("easyPubMed")
 
 ```{r}
 #| label: Environment Setup
-final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT",      "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
-term <- "peripheral edema measurement"
-aa_path <- r"(C:\Users\I0172484\Documents\03 - Scripts\R\WebScrap\ArticleAggregator_data\)"
-# setwd(aa_path)
+final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
+term <- "continuous tadalafil"
+aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/"
+setwd(aa_path)
 ```
 
 ## EMBASE Manual export
