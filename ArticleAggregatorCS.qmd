@@ -1,0 +1,333 @@
+---
+title: "continuous tadalafil (by ArticleAggregator_v05)"
+author: "ReCodeRa"
+format: html
+server: shiny
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Sources of Articles
+
+You should use:
+
+-   Scopus
+-   Web of Science
+    -   [wosr](https://cran.r-project.org/web/packages/wosr/wosr.pdf)
+-   Pubmed
+-   EMBASE (for posters)
+-   Scholar (including patents)
+
+## Code
+Use approach from [vignette](http://cran.nexr.com/web/packages/easyPubMed/vignettes/easyPM_vignette_html.html)
+
+```{r}
+#| label: Install packages
+install.packages("rvest")
+install.packages("dplyr")
+install.packages("httr")
+install.packages("writexl")
+install.packages("easyPubMed")
+
+```
+
+```{r}
+#| label: Load packages
+library("rvest")
+library("dplyr")
+library("httr")
+library("stringr")
+library("glue")
+library("writexl")
+library("purrr")
+library("readxl")
+library("xml2")
+library("easyPubMed")
+```
+
+```{r}
+#| label: Environment Setup
+final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT",      "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
+term <- "peripheral edema measurement"
+aa_path <- r"(C:\Users\I0172484\Documents\03 - Scripts\R\WebScrap\ArticleAggregator_data\)"
+# setwd(aa_path)
+```
+
+## EMBASE Manual export
+
+```{r}
+#| label: Load file exported from EMBASE with standard columns
+eb_std_col <- read_xlsx(glue("{aa_path}eb_src.xlsx"))
+eb_std_col_names <- c("Title", "AuthorAll", "Year", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "FTlink", "EBlink", "OpenLink")
+names(eb_std_col) <- eb_std_col_names 
+
+eb <- eb_std_col %>% 
+  mutate(Author=str_extract(AuthorAll, pat="\\w+(?=\\s)")) %>% 
+  select(-AuthorAll) %>% 
+  mutate(Info=NA) %>% 
+  mutate(Src="EMBASE") %>%
+  mutate(SrcIndex=row_number()) %>% 
+  select(Title, Author, Year, FTlink, Src, Info, everything())
+
+# write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
+# Correct for Van Der Lee manually
+
+```
+
+## Google Scholar Using rvest
+
+```{r}
+#| label: Load Google Scholar page
+gs_term <- str_replace_all(term, " ", "+")
+# my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
+
+# For Title; including patents; excluding citation
+my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=2007&as_vis=1&q=allintitle%3A+{gs_term}&btnG=")
+
+gs <- read_html(my_uri)
+n_hits <- gs %>% html_elements("#gs_ab_md .gs_ab_mdw") %>% html_text() %>% str_extract("\\d+") %>% as.integer()
+n_pg <- n_hits %/% 10 + 1
+# n_pg <- gs %>% html_elements("#gs_n a") %>% html_text() %>% as.integer() %>% na.omit() %>% max()
+
+res_df <- tibble(
+  title = character(),
+  info = character(),
+  ref = character()
+)
+
+for (i in 0:n_pg){
+  curr_pg <- i*10
+  print(curr_pg)
+  my_uri_pg <- glue("https://scholar.google.com/scholar?start={curr_pg}&q={gs_term}&hl=en&as_sdt=0,5&as_vis=1")
+  curr_pg <- read_html(my_uri_pg)
+  art_title <- curr_pg %>% html_elements("h3 a") %>% html_text()
+  art_info <- curr_pg %>% html_elements(".gs_a") %>% html_text()
+  art_ref <- curr_pg %>% html_elements(".gs_rt") %>% html_elements("a") %>% html_attr("href")
+  
+  curr_df <- data.frame(title=art_title, info=art_info, ref=art_ref)
+  res_df <- bind_rows(res_df, curr_df)
+}
+
+
+# art_title <- gs %>% html_elements("h3 a") %>% html_text()
+# art_info <- gs %>% html_elements(".gs_a") %>% html_text()
+# art_ref <- gs %>% html_elements(".gs_rt") %>% html_elements("a") %>% html_attr("href")
+# output_df <- data.frame(title=art_title, info=art_info, ref=art_ref)
+# write_xlsx(res_df, glue("{aa_path}gs_src.xlsx"))
+```
+
+```{r}
+#| label: Split content of column "info"
+# res_df <- read_xlsx(glue("{aa_path}gs_raw.xlsx"))
+sep_df <- res_df %>% 
+  mutate(year=str_extract(info, pat="\\d+")) %>% 
+  mutate(author=str_extract(info, pat="(?<=[A-Z]\\s([A-Z]\\s)?)\\w+(?=\\,\\s|\\s-)")) %>% 
+  select(title, author, year, info, ref)
+
+# rename colums to be compatible with EMBASE and fill missing columns
+names(sep_df) <- c("Title", "Author", "Year", "Info", "FTlink") 
+
+```
+
+```{r}
+#| label: Expand Google Search (gs) columns to fit with EMBASE
+gs <- sep_df %>% 
+  mutate(PubDate = NA) %>% 
+  mutate(PubType = NA) %>%
+  mutate(Abstract = NA) %>% 
+  mutate(CT = NA) %>%
+  mutate(PMID = NA) %>% 
+  mutate(PUI = NA) %>%
+  mutate(DOI = NA) %>% 
+  mutate(EBlink = NA) %>%
+  mutate(OpenLink = NA) %>% 
+  mutate(Src = "GoogleScholar") %>% 
+  mutate(SrcIndex=row_number()) %>%
+  select(Title, Author, Year, FTlink, Src, Info, everything())
+
+# write_xlsx(gs, glue("{aa_path}gs_to_merge.xlsx"))
+
+## Manually input missing values ;)
+```
+## Pubmed
+```{r}
+#| label: PubMed connection and article extraction
+api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+
+sl_term <- str_split(term, " ", simplify=TRUE)
+pm_query <- str_c(sl_term,"[tiab] ", collapse="")
+
+# pm_query <- "peripheral[tiab] edema[tiab] measurement[tiab]"
+# pm_query <- glue("{term}[tiab]")
+
+my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
+my_entrez_id$QueryTranslation
+my_entrez_id$Count
+
+
+# Get articles XML
+my_abstracts_xml <- fetch_pubmed_data(pubmed_id_list = my_entrez_id, 
+                                      retmax=500, 
+                                      format="xml", 
+                                      encoding="UTF-8")
+# print(paste0("Query retireved ",my_entrez_id$Count," records."))
+# print(my_abstracts_xml)
+write(my_abstracts_xml, file = "PubMed_records_by_write.xml")
+
+# recs <- read_xml(my_abstracts_xml) #  From DB connection
+# recs <- read_xml(paste0(aa_path, "PubMed_records_by_write.xml")) # From file
+
+ls_recs <- articles_to_list("PubMed_records_by_write.xml")
+# ls_recs <- my_abstracts_xml
+
+# Extract info form the list of articles
+pm_df <- ls_recs %>% 
+  map_df(~ article_to_df(.x, autofill = TRUE, getAuthors = TRUE, getKeywords = TRUE)) %>% 
+  distinct(pmid, .keep_all=TRUE) %>%
+  select(title, lastname, year, abstract, pmid, doi)
+
+# Add columns
+names(pm_df) <- c("Title", "Author", "Year", "Abstract", "PMID", "DOI")
+pm <- pm_df %>% 
+  mutate(Info = NA) %>% 
+  mutate(PubDate = NA) %>% 
+  mutate(PubType = NA) %>%
+  mutate(CT = NA) %>%
+  mutate(PUI = NA) %>%
+  mutate(EBlink = NA) %>%
+  mutate(OpenLink = NA) %>%
+  mutate(FTlink = paste0("https://dx.doi.org/",pm_df$DOI)) %>% 
+  mutate(Src = "PubMed") %>% 
+  mutate(SrcIndex=row_number()) %>%
+  select(Title, Author, Year, FTlink, Src, Info, everything())
+write_xlsx(pm, glue("{aa_path}pm_to_merge.xlsx"))
+
+```
+## Merge the results
+```{r}
+#| label: Merge results from embase (eb), Google Scholar (gs), and PubMed (pm)
+eb <- read_xlsx(glue("{aa_path}eb_to_merge.xlsx"))
+gs <- read_xlsx(glue("{aa_path}gs_to_merge.xlsx"))
+pm <- read_xlsx(glue("{aa_path}pm_to_merge.xlsx"))
+
+egp <- bind_rows(eb, gs, pm) %>%
+  mutate(Status=NA) %>% 
+  mutate(Priority=NA) %>% 
+  arrange(desc(Year), Author, Src) %>% 
+  select(Status, Priority, everything())
+# rm(list=ls()[!ls() %in% c("eg")])
+write_xlsx(egp, glue("{aa_path}egp_v01.xlsx"))
+```
+
+# ToDo
+- gs extract surnames that include hyphen
+- gs with single page outcome
+- save final table with search_term name (instead of egp)
+- delete variables after writing to xlsx_to_merge
+- delete temporary files (to_marge, PubMed.xml etc.)
+
+# ADDITIONAL INFO
+### DOI by easyPubmed vignette
+
+```{r}
+#| label: PubMed connection
+api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+pm_query <- glue('peripheral edema measurement')
+my_entrez_id <- get_pubmed_ids(pm_query, api_key=api_key)
+
+# Get articles XML
+# my_abstracts_xml <- fetch_pubmed_data(pubmed_id_list = my_entrez_id)
+# print(paste0("Query retireved ",my_entrez_id$Count," records."))
+# print(my_abstracts_xml)
+# write(my_abstracts_xml, file = "PubMed_records_by_write.xml")
+
+# recs <- read_xml(my_abstracts_xml) #  From DB connection
+# recs <- read_xml(paste0(aa_path, "PubMed_records_by_write.xml")) # From file
+
+ls_recs <- articles_to_list("PubMed_records_by_write.xml")
+
+# Extract info form the list of articles
+pm_df <- ls_recs %>% 
+  map_df(~ article_to_df(.x, autofill = TRUE, getAuthors = TRUE, getKeywords = TRUE)) %>% 
+  distinct(pmid, .keep_all=TRUE) %>%
+  select(title, lastname, year, abstract, pmid, doi)
+write_xlsx(pm_df, glue("{aa_path}pm_df_to_merge.xlsx"))
+
+```
+### DOI
+
+you can get DOI using CrossRef API, implemented as
+https://github.com/ropensci/rcrossref
+
+Find out how many elements of **#gs_n a** are detected. Inspire yourself
+in code **WebScrap_Austr_CZ_v12**
+
+```{r}
+#| label: Load Google Scholar page
+
+
+```
+
+```{python}
+#| label: Check python installation
+import os                   
+print(os.environ['path'])  
+```
+
+## Retrieve articles from Google Scholar using SerpAPI
+
+Log to the [SerpAPI site](https://serpapi.com/) Install the serpapi
+package (package NOT in conda, pip=TRUE must be used):
+
+```{r}
+library(reticulate)
+py_install("google-search-results", pip=TRUE )
+```
+
+Next load the SerpAPI interaction package.
+
+```{python}
+from serpapi import GoogleSearch
+params = {
+  "api_key": "c155eb329cff9b71b6b3cb8edbde7b049ad4cc6ec94a8a53b9a597915e18feb8",
+  "engine": "google_scholar",
+  "q": "S-lercanidipine",
+  "hl": "en"
+}
+search = GoogleSearch(params)
+results = search.get_dict()
+
+
+
+```
+
+## Shiny Documents
+
+This Quarto document is made interactive using Shiny. Interactive
+documents allow readers to modify parameters and see the results
+immediately. Learn more about Shiny interactive documents at
+<https://quarto.org/docs/interactive/shiny/>.
+
+## Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are
+automatically updated whenever inputs change. This demonstrates how a
+standard R plot can be made interactive:
+
+```{r}
+sliderInput("bins", "Number of bins:", 
+            min = 1, max = 50, value = 30)
+plotOutput("distPlot")
+```
+
+```{r}
+#| context: server
+output$distPlot <- renderPlot({
+   x <- faithful[, 2]  # Old Faithful Geyser data
+   bins <- seq(min(x), max(x), length.out = input$bins + 1)
+   hist(x, breaks = bins, col = 'darkgray', border = 'white',
+        xlab = 'Waiting time to next eruption (in mins)',
+        main = 'Histogram of waiting times')
+})
+```
