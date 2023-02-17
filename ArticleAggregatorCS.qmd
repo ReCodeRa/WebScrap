@@ -71,7 +71,7 @@ eb <- eb_std_col %>%
   mutate(SrcIndex=row_number()) %>% 
   select(Title, Author, Year, FTlink, Src, Info, everything())
 
-# write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
+write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
 # Correct for Van Der Lee manually
 
 ```
@@ -147,7 +147,7 @@ gs <- sep_df %>%
   mutate(SrcIndex=row_number()) %>%
   select(Title, Author, Year, FTlink, Src, Info, everything())
 
-# write_xlsx(gs, glue("{aa_path}gs_to_merge.xlsx"))
+write_xlsx(gs, glue("{aa_path}gs_to_merge.xlsx"))
 
 ## Manually input missing values ;)
 ```
