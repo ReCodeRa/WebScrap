@@ -40,7 +40,7 @@ You should use:
 - Load packages
 - Set environment check "term" and "aa_path"
 - Decide if use Scholar only for in titles search or full search (enable corresponding url)
-- 
+- Final Excel table as "egp_v01.xlsx"
 
 
 ## Code
