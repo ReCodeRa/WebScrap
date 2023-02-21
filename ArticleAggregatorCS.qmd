@@ -20,7 +20,28 @@ You should use:
 -   Scholar (including patents)
 
 ## Procedure
-- EMBASE search: search in "" 
+- EMBASE search: Zentiva Network or VPN, search in "Title, Abstract or Author Keywords"
+- Export result in Excel Column Format with following fields: 
+    1. Title
+    2. Author names
+    3. Publication Year
+    4. Publication type
+    5. Date of publication
+    6. Digital Object Identifier (DOI)
+    7. Medline PMID
+    8. Embase identification number (PUI)
+    9. Abstract
+    10. Clinical Trial Number
+    11. Full text link
+    12. Embase link
+    13. Open URL Link
+- Save to working directory as "eb_src.xlsx"
+- Install packages
+- Load packages
+- Set environment check "term" and "aa_path"
+- Decide if use Scholar only for in titles search or full search (enable corresponding url)
+- 
+
 
 ## Code
 Use approach from [vignette](http://cran.nexr.com/web/packages/easyPubMed/vignettes/easyPM_vignette_html.html)
@@ -84,10 +105,10 @@ write_xlsx(eb, glue("{aa_path}eb_to_merge.xlsx"))
 ```{r}
 #| label: Load Google Scholar page
 gs_term <- str_replace_all(term, " ", "+")
-# my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
+my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={gs_term}")
 
 # For Title; including patents; excluding citation
-my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=2007&as_vis=1&q=allintitle%3A+{gs_term}&btnG=")
+# my_uri <- glue("https://scholar.google.com/scholar?hl=en&as_sdt=2007&as_vis=1&q=allintitle%3A+{gs_term}&btnG=")
 
 gs <- read_html(my_uri)
 n_hits <- gs %>% html_elements("#gs_ab_md .gs_ab_mdw") %>% html_text() %>% str_extract("\\d+") %>% as.integer()
