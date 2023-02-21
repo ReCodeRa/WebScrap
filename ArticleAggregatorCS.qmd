@@ -1,5 +1,5 @@
 ---
-title: "continuous tadalafil (by ArticleAggregator_v05)"
+title: "ramipril cough amlodipine (by ArticleAggregator_v05)"
 author: "ReCodeRa"
 format: html
 server: shiny
@@ -18,6 +18,9 @@ You should use:
 -   Pubmed
 -   EMBASE (for posters)
 -   Scholar (including patents)
+
+## Procedure
+- EMBASE search: search in "" 
 
 ## Code
 Use approach from [vignette](http://cran.nexr.com/web/packages/easyPubMed/vignettes/easyPM_vignette_html.html)
@@ -50,8 +53,8 @@ library("easyPubMed")
 ```{r}
 #| label: Environment Setup
 final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
-term <- "continuous tadalafil"
-aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/"
+term <- "ramipril cough amlodipine"
+aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/rami/"
 setwd(aa_path)
 ```
 
