@@ -178,7 +178,8 @@ write_xlsx(gs, glue("{aa_path}gs_to_merge.xlsx"))
 ## Pubmed
 ```{r}
 #| label: PubMed connection and article extraction
-api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+# api_key <- "0b1204719f054732c66e608d9d3f2c749c08"
+api_key <- "7677957ef60aa19aa6c5856e126b696d6408"
 
 sl_term <- str_split(term, " ", simplify=TRUE)
 pm_query <- str_c(sl_term,"[tiab] ", collapse="")
