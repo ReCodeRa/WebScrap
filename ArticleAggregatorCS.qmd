@@ -1,5 +1,5 @@
 ---
-title: "ramipril cough amlodipine (by ArticleAggregator_v05)"
+title: "refractory erectile dysfunction (by ArticleAggregator_v05)"
 author: "ReCodeRa"
 format: html
 server: shiny
@@ -74,8 +74,8 @@ library("easyPubMed")
 ```{r}
 #| label: Environment Setup
 final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
-term <- "ramipril cough amlodipine"
-aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/rami/"
+term <- "refractory erectile dysfunction"
+aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/refrac_ED/"
 setwd(aa_path)
 ```
 
