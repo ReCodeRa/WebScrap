@@ -75,7 +75,7 @@ library("easyPubMed")
 #| label: Environment Setup
 final_col_names <- c("Title", "Author", "Year", "FTlink", "Src", "Info", "PubDate", "PubType", "Abstract", "CT", "PMID", "PUI", "DOI", "EBlink", "OpenLink") 
 term <- "refractory erectile dysfunction"
-aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/refrac_ED/"
+aa_path <- "/workspaces/WebScrap/ArticleAggregator_data/rami/refrac_ED/"
 setwd(aa_path)
 ```
 
