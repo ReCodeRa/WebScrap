@@ -253,6 +253,22 @@ write_xlsx(egp, glue("{aa_path}egp_v01.xlsx"))
 - delete variables after writing to xlsx_to_merge
 - delete temporary files (to_marge, PubMed.xml etc.)
 
+## Merge EB and GS ony
+```{r}
+#| label: Merge results from embase (eb), Google Scholar (gs), and PubMed (pm)
+eb <- read_xlsx(glue("{aa_path}eb_to_merge.xlsx"))
+gs <- read_xlsx(glue("{aa_path}gs_to_merge.xlsx"))
+# pm <- read_xlsx(glue("{aa_path}pm_to_merge.xlsx"))
+
+eg <- bind_rows(eb, gs) %>%
+  mutate(Status=NA) %>% 
+  mutate(Priority=NA) %>% 
+  arrange(desc(Year), Author, Src) %>% 
+  select(Status, Priority, everything())
+# rm(list=ls()[!ls() %in% c("eg")])
+write_xlsx(eg, glue("{aa_path}eg_v02.xlsx"))
+```
+
 # ADDITIONAL INFO
 ### DOI by easyPubmed vignette
 
